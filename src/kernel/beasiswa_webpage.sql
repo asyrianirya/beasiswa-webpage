@@ -22,8 +22,8 @@ INSERT INTO `jenis_beasiswa` (`id`, `nama_beasiswa`, `deskripsi_beasiswa`) VALUE
 CREATE TABLE `siswa_beasiswa` (
   `id` int(11) NOT NULL,
   `nama` varchar(100) NOT NULL,
-  `email` varchar(20) NOT NULL,
-  `hp` varchar(20) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `hp` varchar(50) NOT NULL,
   `semester` int(1) NOT NULL,
   `ipk` float NOT NULL,
   `beasiswa` int(100) NOT NULL,

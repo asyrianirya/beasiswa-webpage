@@ -130,3 +130,11 @@ div.berkas {
   display: flex;
   justify-content: center;
 }
+
+.button-danger {
+  background-color: red !important;
+}
+
+.button-danger:hover {
+  background-color: rgb(167, 6, 6) !important;
+}

@@ -86,7 +86,7 @@ $beasiswaOptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </div>
           <input type="hidden" id="status_ajuan" name="status_ajuan" value="<?= $status_ajuan ?>"/>
           <input type="submit" id="submitBtn" value="Daftar" onsubmit="validateForm()"/>
-          <input type="button" id="cancel" value="Batal" />
+          <input type="button" id="cancel" value="Batal" class="button-danger" />
         </div>
       </form>
     </main>
