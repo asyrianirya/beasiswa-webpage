@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $filename = '';
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = "Format email tidak valid!";
+        $errorEmail = "Format email tidak valid!";
     }
     
     if (isset($_FILES['berkas'])) {
@@ -28,13 +28,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (in_array($fileType, $allowedTypes)) {
                 $filename = $_FILES['berkas']['name'];
             } else {
-                $error = "Tipe file tidak diizinkan. Hanya PDF, JPG, dan ZIP yang diperbolehkan.";
+                $errorBerkas = "Tipe file tidak diizinkan. Hanya PDF, JPG, dan ZIP yang diperbolehkan.";
             }
         } else {
-            $error = "Terjadi kesalahan saat mengunggah file. Error code: " . $_FILES['berkas']['error'];
+            $errorBerkas = "Terjadi kesalahan saat mengunggah file. Error code: " . $_FILES['berkas']['error'];
         }
     } else {
-        $error = "Tidak ada file yang diupload.";
+        $errorBerkas = "Tidak ada file yang diupload.";
     }
     
 ?>
@@ -61,7 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" name="email" id="email" disabled value="<?=$email?>" />
+            <input type="email" name="email" id="email" disabled value="<?php 
+                if (empty($errorEmail)) {
+                    echo "$email";
+                } else {
+                    echo "Kesalahan: $errorEmail";
+                }
+            ?>" />
           </div>
           <div class="form-group">
             <label for="hp">Nomor HP</label>
@@ -99,10 +105,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               id="berkas"
               type="text"
               value="<?php 
-                if (empty($error)) {
-                    echo "basename($filename)";
+                if (empty($errorBerkas)) {
+                    echo "$filename";
                 } else {
-                    echo "Kesalahan: $error";
+                    echo "Kesalahan: $errorBerkas";
                 }
               ?>" disabled />
           </div>
