@@ -16,7 +16,7 @@ nav {
   align-items: center; 
 }
 
-ul {
+nav ul {
   display: flex; 
   justify-content: space-around; 
   list-style: none;
@@ -25,15 +25,16 @@ ul {
 }
 
 
-li {
+nav ul a  {
   padding: 10px 20px;
   color: white;
   cursor: pointer;
   flex-grow: 1;
   text-align: center;
+  text-decoration: none;
 }
 
-li:hover {
+nav ul a:hover {
   background-color: #333;
   transition: 0.3s;
 }
