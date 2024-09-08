@@ -9,6 +9,15 @@ function generateRandomIPK()
 $ipk = generateRandomIPK();
 $status_ajuan = 0;
 
+$pdo = new PDO('mysql:host=localhost;dbname=beasiswa_webpage', 'root', '');
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+$sql = "SELECT id, nama_beasiswa FROM jenis_beasiswa";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$beasiswaOptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
 ?>
 </head>
 <body onload="cekIPK('<?php echo $ipk; ?>')">
@@ -17,7 +26,7 @@ $status_ajuan = 0;
     </header>
 
     <div class="title">
-      <h1>DAFTAR BEASISWA</h1>
+      <h1>DAFTAR SISWA BEASISWA</h1>
     </div>
 
     <main class="card">
@@ -36,7 +45,7 @@ $status_ajuan = 0;
           </div>
           <div class="form-group">
             <label for="hp">Nomor HP</label>
-            <input type="number" name="hp" id="hp" required />
+            <input type="text" name="hp" id="hp" pattern="\+?[0-9]*" title="Hanya karakter + dan angka" required />
           </div>
           <div class="form-group">
             <label for="semester">Semester saat ini</label>
@@ -52,7 +61,7 @@ $status_ajuan = 0;
             </select>
           </div>
           <div class="form-group">
-            <label for="ipk">IPK terakhir</label>
+            <label>IPK terakhir</label>
             <input type="text"  value="<?= $ipk ?>" disabled />
             <input type="hidden" name="ipk" id="ipk" value="<?= $ipk ?>" />
             <p id="ipk-warning" style="display:none; color:red;">IPK kurang dari 3.0, pilihan beasiswa dan upload berkas tidak tersedia.</p>
@@ -60,9 +69,11 @@ $status_ajuan = 0;
           <div class="form-group">
             <label for="beasiswa">Pilihan Beasiswa</label>
             <select name="beasiswa" id="beasiswa">
-              <option value="1">Beasiswa 1</option>
-              <option value="2">Beasiswa 2</option>
-              <option value="3">Beasiswa 3</option>
+              <?php foreach ($beasiswaOptions as $option): ?>
+                <option value="<?php echo htmlspecialchars($option['id']); ?>">
+                  <?php echo htmlspecialchars($option['nama_beasiswa']); ?>
+                </option>
+              <?php endforeach; ?>
             </select>
           </div>
           <div class="form-group berkas">

@@ -7,6 +7,14 @@
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  $pdo = new PDO('mysql:host=localhost;dbname=beasiswa_webpage', 'root', '');
+  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+  $sql = "SELECT id, nama_beasiswa FROM jenis_beasiswa";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute();
+  $beasiswaOptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     $name = $_POST['name'];
     $email = $_POST['email'];
     $hp = $_POST['hp'];
@@ -50,32 +58,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <main class="card">
-    <form>
+    <form action="./src/kernel/set_siswa.php" method="POST" enctype="multipart/form-data">
     <div class="card-title">
           <p>Registrasi Beasiswa</p>
         </div>
         <div class="card-content">
           <div class="form-group">
-            <label for="name">Nama</label>
-            <input type="text" name="name" id="name" disabled value="<?=$name?>"/>
+            <label>Nama</label>
+            <input type="text" disabled value="<?=$name?>"/>
+            <input type="hidden" name="name" id="name" value="<?=$name?>"/>
           </div>
           <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" disabled value="<?php 
+            <label>Email</label>
+            <input type="email" disabled value="<?php 
                 if (empty($errorEmail)) {
                     echo "$email";
                 } else {
                     echo "Kesalahan: $errorEmail";
                 }
             ?>" />
+            <input type="email" name="email" id="email" hidden value="<?php 
+                if (empty($errorEmail)) {
+                    echo "$email";
+                } else {
+                    echo "";
+                }
+            ?>" />
           </div>
           <div class="form-group">
-            <label for="hp">Nomor HP</label>
-            <input type="number" name="hp" id="hp" disabled value="<?=$hp?>" />
+            <label >Nomor HP</label>
+            <input type="text" disabled value="<?=$hp?>" />
+            <input type="text" name="hp" id="hp" hidden value="<?=$hp?>" />
           </div>
           <div class="form-group">
             <label for="semester">Semester saat ini</label>
-            <select name="semester" id="semester" disabled>
+            <select disabled>
+              <option value="1" <?php if ($semester == 1) echo 'selected'; ?> >1 (Satu)</option>
+              <option value="2" <?php if ($semester == 2) echo 'selected'; ?> >2 (Dua)</option>
+              <option value="3" <?php if ($semester == 3) echo 'selected'; ?> >3 (Tiga)</option>
+              <option value="4" <?php if ($semester == 4) echo 'selected'; ?> >4 (Empat)</option>
+              <option value="5" <?php if ($semester == 5) echo 'selected'; ?> >5 (Lima)</option>
+              <option value="6" <?php if ($semester == 6) echo 'selected'; ?> >6 (Enam)</option>
+              <option value="7" <?php if ($semester == 7) echo 'selected'; ?> >7 (Tujuh)</option>
+              <option value="8" <?php if ($semester == 8) echo 'selected'; ?> >8 (Delapan)</option>
+            </select>
+            <select name="semester" id="semester" hidden>
               <option value="1" <?php if ($semester == 1) echo 'selected'; ?> >1 (Satu)</option>
               <option value="2" <?php if ($semester == 2) echo 'selected'; ?> >2 (Dua)</option>
               <option value="3" <?php if ($semester == 3) echo 'selected'; ?> >3 (Tiga)</option>
@@ -87,20 +114,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </select>
           </div>
           <div class="form-group">
-            <label for="ipk">IPK terakhir</label>
+            <label>IPK terakhir</label>
             <input type="text"  value="<?= $ipk ?>" disabled />
+            <input type="text" id="ipk" name="ipk" value="<?= $ipk ?>" hidden />
           </div>
           <div class="form-group">
-            <label for="beasiswa">Pilihan Beasiswa</label>
-            <select name="beasiswa" id="beasiswa" disabled>
-              <option value="1" <?php if ($beasiswa == 1) echo 'selected'; ?> >Beasiswa Akademik</option>
-              <option value="2" <?php if ($beasiswa == 2) echo 'selected'; ?> >Beasiswa Non-Akademik</option>
-              <option value="3" <?php if ($beasiswa == 3) echo 'selected'; ?> >Beasiswa Ekonomi</option>
-            </select>
+              <label for="beasiswa">Pilihan Beasiswa</label>
+              <select disabled>
+                  <?php foreach ($beasiswaOptions as $option): ?>
+                      <option value="<?php echo htmlspecialchars($option['id']); ?>"
+                          <?php if (isset($selectedBeasiswa) && $selectedBeasiswa == $option['id']) echo 'selected'; ?>>
+                          <?php echo htmlspecialchars($option['nama_beasiswa']); ?>
+                      </option>
+                  <?php endforeach; ?>
+              </select>
+              <select name="beasiswa" id="beasiswa" hidden>
+                  <?php foreach ($beasiswaOptions as $option): ?>
+                      <option value="<?php echo htmlspecialchars($option['id']); ?>"
+                          <?php if (isset($selectedBeasiswa) && $selectedBeasiswa == $option['id']) echo 'selected'; ?>>
+                          <?php echo htmlspecialchars($option['nama_beasiswa']); ?>
+                      </option>
+                  <?php endforeach; ?>
+              </select>
           </div>
+
           <div class="form-group berkas">
             <label for="berkas">Upload Berkas Syarat</label>
             <input
+              type="text"
+              value="<?php 
+                if (empty($errorBerkas)) {
+                    echo "$filename";
+                } else {
+                    echo "Kesalahan: $errorBerkas";
+                }
+              ?>" disabled />
+              <input
               name="berkas"
               id="berkas"
               type="text"
@@ -110,10 +159,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 } else {
                     echo "Kesalahan: $errorBerkas";
                 }
-              ?>" disabled />
+              ?>" hidden />
           </div>
           <div class="form-group">
-            <label for="ipk">Status Ajuan</label>
+            <label>Status Ajuan</label>
             <input type="text"  value="<?php 
                 if($status_ajuan){
                     echo "Sudah terverifikasi";
@@ -121,7 +170,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     echo "Belum diverifikasi";
                 }
             ?>" disabled />
+            <input type="text" id="status_ajuan" name="status_ajuan" value="<?php 
+                if($status_ajuan){
+                    echo "Sudah terverifikasi";
+                } else {
+                    echo "Belum diverifikasi";
+                }
+            ?>" hidden />
           </div>
+          <div class="form-group" style="display: flex; flex-direction: column;">
+                <input type="submit" value="KONFIRMASI">
+          </div>
+
         </div>
       </form>
     </main>
@@ -129,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <?php
 } else {
-    echo "Form belum diisi.";
+    include('./src/components/siswa_terdaftar.php');
 }
 ?>
 </body>
