@@ -1,0 +1,125 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+header {
+  background-color: #4CAF50;
+  padding: 10px 0;
+}
+
+
+nav {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+}
+
+ul {
+  display: flex; 
+  justify-content: space-around; 
+  list-style: none;
+  width: 100%; 
+  max-width: 1200px;
+}
+
+
+li {
+  padding: 10px 20px;
+  color: white;
+  cursor: pointer;
+  flex-grow: 1;
+  text-align: center;
+}
+
+li:hover {
+  background-color: #333;
+  transition: 0.3s;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  padding: 10px
+}
+
+
+.card-content {
+border: 1px solid black;
+padding: 10px;
+box-shadow: 10px 10px ;
+}
+
+.card-title {
+  border: 1px solid black;
+  border-radius: 10px 10px 0px 0px;
+  padding: 10px
+  
+}
+
+form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="file"],
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="file"]:focus,
+select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+input[type="submit"],
+input[type="button"] {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover {
+  background-color: #0056b3;
+}
+
+div.berkas {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#berkas {
+    width: 50%;
+}
