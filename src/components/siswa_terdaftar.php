@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="src/vendor/datatables/colResize/jquery.dataTables.colResize.css" />
+
 <div class="title">
         <h2>Daftar Siswa Terdaftar</h2>
     </div>
@@ -38,12 +38,8 @@
             </tbody>
         </table>    
     </div>
-    <script src="./src/vendor/datatables/colResize/jquery.dataTables.colResize.js"></script>
     <script>
         let table = new DataTable('#myTable');
        table.DataTable({
-        colResize: {
-            isEnabled: true,
-        }
         });
     </script>
