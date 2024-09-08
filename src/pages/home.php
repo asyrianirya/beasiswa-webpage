@@ -2,8 +2,8 @@
 function generateRandomIPK()
 {
   //return number_format(2.20,2);
-  return number_format(3.00,2);
-  //  return number_format(rand(200, 400) / 100, 2);  
+  // return number_format(3.00,2);
+    return number_format(rand(200, 400) / 100, 2);  
 }
 
 $ipk = generateRandomIPK();

@@ -93,9 +93,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           <div class="form-group">
             <label for="beasiswa">Pilihan Beasiswa</label>
             <select name="beasiswa" id="beasiswa" disabled>
-              <option value="1" <?php if ($beasiswa == 1) echo 'selected'; ?> >Beasiswa 1</option>
-              <option value="2" <?php if ($beasiswa == 2) echo 'selected'; ?> >Beasiswa 2</option>
-              <option value="3" <?php if ($beasiswa == 3) echo 'selected'; ?> >Beasiswa 3</option>
+              <option value="1" <?php if ($beasiswa == 1) echo 'selected'; ?> >Beasiswa Akademik</option>
+              <option value="2" <?php if ($beasiswa == 2) echo 'selected'; ?> >Beasiswa Non-Akademik</option>
+              <option value="3" <?php if ($beasiswa == 3) echo 'selected'; ?> >Beasiswa Ekonomi</option>
             </select>
           </div>
           <div class="form-group berkas">

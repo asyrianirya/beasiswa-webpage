@@ -124,3 +124,9 @@ div.berkas {
 #berkas {
     width: 50%;
 }
+
+.table-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
