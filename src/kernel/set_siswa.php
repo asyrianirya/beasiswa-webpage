@@ -17,22 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_SESSION['uploaded_file'])) {
         $fileInfo = $_SESSION['uploaded_file'];
         $filename = $fileInfo['filename'];
-        $fileTempPath = $fileInfo['temp_path'];
         $filePath = $fileInfo['path'];
     }
 
-    if (move_uploaded_file($fileTempPath, $filePath)) {
-        echo "File berhasil diunggah: " . $newFilename;
-    } else {
-        $errorBerkas = "Gagal memindahkan file.";
-    }
-
-    if (rename($fileTempPath, $filePath)) {
-        echo "File berhasil dipindahkan ke lokasi permanen.";
-    } else {
-        echo "Gagal memindahkan file.";
-    }
-    
 
     $sql = "INSERT INTO siswa_beasiswa (nama, email, hp, semester, ipk, beasiswa, berkas, status_ajuan) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

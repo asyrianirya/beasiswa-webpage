@@ -16,7 +16,6 @@ function guidv4($data = null) {
 
 $error = '';
 $uploadDirectory = 'uploads/';
-$tmpUploadDirectory = 'tmp_'.$uploadDirectory;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $pdo = new PDO('mysql:host=localhost;dbname=beasiswa_webpage', 'root', '');
@@ -53,30 +52,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $filename = guidv4();
                 $newFilename = $filename;
                 
-                $fileTmpPath = $uploadDirectory . $originalFilename;
-                $fileExtension = pathinfo($fileTmpPath, PATHINFO_EXTENSION); 
-                $fileBaseName = pathinfo($fileTmpPath, PATHINFO_FILENAME); 
+                $filePath = $uploadDirectory . $originalFilename;
+                $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION); 
+                $fileBaseName = pathinfo($filePath, PATHINFO_FILENAME); 
 
                 if (!is_dir($uploadDirectory)) {
                     mkdir($uploadDirectory, 0777, true);
                 }
-                if(!is_dir($tmpUploadDirectory)){
-                    mkdir($tmpUploadDirectory, 0777, true);
-                }
 
                 do {
                     $newFilename = $filename . '.' . $fileExtension;
-                    $fileTmpPath = $tmpUploadDirectory . $newFilename;
-                } while (file_exists($fileTmpPath)); 
+                    $filePath = $uploadDirectory . $newFilename;
+                } while (file_exists($filePath)); 
 
-                $filePath = $uploadDirectory . $newFilename;
                 session_start();
                     $_SESSION['uploaded_file'] = [
                         'filename' => $newFilename,
-                        'temp_path' => $fileTmpPath,
                         'path' => $filePath
                     ];
-                    if (move_uploaded_file($_FILES['berkas']['tmp_name'],$fileTmpPath)) {
+                    if (move_uploaded_file($_FILES['berkas']['tmp_name'],$filePath)) {
                         
                         echo "File berhasil diunggah: " . $newFilename;
                     } else {
@@ -201,22 +195,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if (isset($_SESSION['uploaded_file'])) {
                     $fileInfo = $_SESSION['uploaded_file'];
                     $filename = $fileInfo['filename'];
-                    $fileTempPath = $fileInfo['temp_path'];
+                    $filePath = $fileInfo['path'];
 
-                    echo '<a style="margin-left: 10px;" href="' . $fileTempPath  . '" target="_blank">cek</a>';
+                    echo '<a style="margin-left: 10px;" href="' . $filePath  . '" target="_blank">cek</a>';
                 }
                 ?>
-              <input
-              name="fileTmpPath"
-              id="fileTmpPath"
-              type="hidden"
-              value="<?php 
-                if (empty($errorBerkas)) {
-                    echo "$fileTmpPath";
-                } else {
-                    echo "$errorBerkas";
-                }
-              ?>" hidden />
               <input
               name="filePath"
               id="filePath"
