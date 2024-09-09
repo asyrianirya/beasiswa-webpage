@@ -22,9 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (move_uploaded_file($fileTempPath, $filePath)) {
-        echo "File berhasil diunggah dan dipindahkan ke: " . $targetfilePath;
+        echo "File berhasil diunggah: " . $newFilename;
     } else {
-        echo "Gagal memindahkan file.";
+        $errorBerkas = "Gagal memindahkan file.";
     }
 
     if (rename($fileTempPath, $filePath)) {

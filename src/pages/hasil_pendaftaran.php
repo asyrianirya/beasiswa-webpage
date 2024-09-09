@@ -35,8 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $ipk = $_POST['ipk'];
     $status_ajuan = 0;
     $filename = '';
-    $newFilename;
-    $fileTmpPath;
     
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -72,19 +70,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 } while (file_exists($fileTmpPath)); 
 
                 $filePath = $uploadDirectory . $newFilename;
-
-
-                if (move_uploaded_file($_FILES['berkas']['tmp_name'], $fileTmpPath)) {
-                    session_start();
+                session_start();
                     $_SESSION['uploaded_file'] = [
                         'filename' => $newFilename,
                         'temp_path' => $fileTmpPath,
                         'path' => $filePath
                     ];
-                    echo "File berhasil diunggah: " . $newFilename;
-                } else {
-                    $errorBerkas = "Gagal memindahkan file.";
-                }
+                    if (move_uploaded_file($_FILES['berkas']['tmp_name'],$fileTmpPath)) {
+                        
+                        echo "File berhasil diunggah: " . $newFilename;
+                    } else {
+                        $errorBerkas = "Gagal memindahkan file.";
+                    }
             } else {
                 $errorBerkas = "Tipe file tidak diizinkan. Hanya PDF, JPG, dan ZIP yang diperbolehkan.";
             }
@@ -206,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $filename = $fileInfo['filename'];
                     $fileTempPath = $fileInfo['temp_path'];
 
-                    echo '<a style="margin-left: 10px;" href="' . $fileTempPath . '" target="_blank">cek</a>';
+                    echo '<a style="margin-left: 10px;" href="' . $fileTempPath  . '" target="_blank">cek</a>';
                 }
                 ?>
               <input
