@@ -4,7 +4,19 @@
 </header>
 
 <?php
+function guidv4($data = null) {
+    $data = $data ?? random_bytes(16);
+    assert(strlen($data) == 16);
+
+    $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+    $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+}
+
 $error = '';
+$uploadDirectory = 'uploads/';
+$tmpUploadDirectory = 'tmp_'.$uploadDirectory;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $pdo = new PDO('mysql:host=localhost;dbname=beasiswa_webpage', 'root', '');
@@ -21,8 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $semester = $_POST['semester'];
     $beasiswa = isset($_POST['beasiswa']) ? $_POST['beasiswa'] : 'Tidak tersedia';
     $ipk = $_POST['ipk'];
-    $status_ajuan = 0; //$_POST['status_ajuan'];
+    $status_ajuan = 0;
     $filename = '';
+    $newFilename;
+    $fileTmpPath;
+    
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errorEmail = "Format email tidak valid!";
@@ -34,7 +49,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $fileType = $_FILES['berkas']['type'];
             
             if (in_array($fileType, $allowedTypes)) {
-                $filename = $_FILES['berkas']['name'];
+
+                $originalFilename = basename($_FILES['berkas']['name']);
+
+                $filename = guidv4();
+                $newFilename = $filename;
+                
+                $fileTmpPath = $uploadDirectory . $originalFilename;
+                $fileExtension = pathinfo($fileTmpPath, PATHINFO_EXTENSION); 
+                $fileBaseName = pathinfo($fileTmpPath, PATHINFO_FILENAME); 
+
+                if (!is_dir($uploadDirectory)) {
+                    mkdir($uploadDirectory, 0777, true);
+                }
+                if(!is_dir($tmpUploadDirectory)){
+                    mkdir($tmpUploadDirectory, 0777, true);
+                }
+
+                do {
+                    $newFilename = $filename . '.' . $fileExtension;
+                    $fileTmpPath = $tmpUploadDirectory . $newFilename;
+                } while (file_exists($fileTmpPath)); 
+
+                $filePath = $uploadDirectory . $newFilename;
+
+
+                if (move_uploaded_file($_FILES['berkas']['tmp_name'], $fileTmpPath)) {
+                    session_start();
+                    $_SESSION['uploaded_file'] = [
+                        'filename' => $newFilename,
+                        'temp_path' => $fileTmpPath,
+                        'path' => $filePath
+                    ];
+                    echo "File berhasil diunggah: " . $newFilename;
+                } else {
+                    $errorBerkas = "Gagal memindahkan file.";
+                }
             } else {
                 $errorBerkas = "Tipe file tidak diizinkan. Hanya PDF, JPG, dan ZIP yang diperbolehkan.";
             }
@@ -47,10 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
 ?>
 <style>
-.title {
-    display: flex;
-    justify-content: center;
-}
 
 </style>
     <div class="title">
@@ -139,25 +185,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           </div>
 
           <div class="form-group berkas">
-            <label for="berkas">Upload Berkas Syarat</label>
+            <label>Upload Berkas Syarat</label>
             <input
               type="text"
               value="<?php 
                 if (empty($errorBerkas)) {
-                    echo "$filename";
+                    echo "$originalFilename";
                 } else {
                     echo "Kesalahan: $errorBerkas";
                 }
               ?>" disabled />
+
+                <?php
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start(); 
+                }                
+
+                if (isset($_SESSION['uploaded_file'])) {
+                    $fileInfo = $_SESSION['uploaded_file'];
+                    $filename = $fileInfo['filename'];
+                    $fileTempPath = $fileInfo['temp_path'];
+
+                    echo '<a style="margin-left: 10px;" href="' . $fileTempPath . '" target="_blank">cek</a>';
+                }
+                ?>
               <input
-              name="berkas"
-              id="berkas"
-              type="text"
+              name="fileTmpPath"
+              id="fileTmpPath"
+              type="hidden"
               value="<?php 
                 if (empty($errorBerkas)) {
-                    echo "$filename";
+                    echo "$fileTmpPath";
                 } else {
-                    echo "Kesalahan: $errorBerkas";
+                    echo "$errorBerkas";
+                }
+              ?>" hidden />
+              <input
+              name="filePath"
+              id="filePath"
+              type="hidden"
+              value="<?php 
+                if (empty($errorBerkas)) {
+                    echo "$filePath";
+                } else {
+                    echo "$errorBerkas";
                 }
               ?>" hidden />
           </div>

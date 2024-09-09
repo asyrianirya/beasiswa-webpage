@@ -18,28 +18,51 @@
                 </tr>
             </thead>
             <tbody>
-                    <?php
-                    include('./src/kernel/get_siswa.php');
-                    $no = 1; 
-                    foreach ($siswa as $s) { 
-                        echo "<tr>";
-                        echo "<td>" . $no++ . "</td>";
-                        echo "<td>" . $s['nama'] . "</td>";
-                        echo "<td>" . $s['email'] . "</td>";
-                        echo "<td>" . $s['hp'] . "</td>";
-                        echo "<td>" . $s['semester'] . "</td>";
-                        echo "<td>" . $s['ipk'] . "</td>";
-                        echo "<td>" . $s['beasiswa'] . "</td>";
-                        echo "<td>" . $s['berkas'] . "</td>";
-                        echo "<td>" . $s['status_ajuan'] . "</td>";
-                        echo "</tr>";
+            <?php
+            include('./src/kernel/get_siswa.php');
+            $no = 1; 
+            foreach ($siswa as $s) {
+                $filePath = $s['berkas'];
+                $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION); // Mendapatkan ekstensi file
+
+                echo "<tr>";
+                echo "<td>" . $no++ . "</td>";
+                echo "<td>" . htmlspecialchars($s['nama']) . "</td>";
+                echo "<td>" . htmlspecialchars($s['email']) . "</td>";
+                echo "<td>" . htmlspecialchars($s['hp']) . "</td>";
+                echo "<td>" . htmlspecialchars($s['semester']) . "</td>";
+                echo "<td>" . htmlspecialchars($s['ipk']) . "</td>";
+                echo "<td>" . htmlspecialchars($s['beasiswa']) . "</td>";
+                
+                // Menampilkan link atau ikon unduhan berdasarkan tipe file
+                echo "<td>";
+                if (!empty($filePath)) {
+                    if ($fileExtension == 'pdf') {
+                        echo "<a href='" . htmlspecialchars($filePath) . "' target='_blank'>Lihat PDF</a>";
+                    } else if ($fileExtension == 'doc' || $fileExtension == 'docx') {
+                        echo "<a href='" . htmlspecialchars($filePath) . "' download>Unduh DOC/DOCX</a>";
+                    } else if ($fileExtension == 'zip') {
+                        echo "<a href='" . htmlspecialchars($filePath) . "' download>Unduh ZIP</a>";
+                    } else {
+                        echo "Format tidak didukung";
                     }
-                    ?>
+                } else {
+                    echo "Tidak ada berkas";
+                }
+                echo "</td>";
+                
+                echo "<td>" . htmlspecialchars($s['status_ajuan']) . "</td>";
+                echo "</tr>";
+            }
+            ?>
+
             </tbody>
         </table>    
     </div>
     <script>
-        let table = new DataTable('#myTable');
-       table.DataTable({
-        });
+
+    let table = new DataTable('#myTable', {
+        responsive: true,
+    });
+       
     </script>
