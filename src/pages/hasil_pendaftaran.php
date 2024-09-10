@@ -189,10 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
               ?>" disabled />
 
-                <?php
-                if (session_status() == PHP_SESSION_NONE) {
-                    session_start(); 
-                }                
+                <?php               
 
                 if (isset($_SESSION['uploaded_file'])) {
                     $fileInfo = $_SESSION['uploaded_file'];
