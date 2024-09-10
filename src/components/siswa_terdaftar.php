@@ -27,6 +27,19 @@
 
                 echo "<tr>";
                 echo "<td>" . $no++ . "</td>";
+            /*
+                include 'conn.php';
+                $nama_beasiswa = "SELECT nama_beasiswa FROM jenis_beasiswa WHERE id=$no"; 
+                $result = mysqli_query($conn, $sql);
+
+                $beasiswa = [];
+                if (mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $beasiswa[] = $row;
+                    }
+                }
+                ?>
+            */
                 echo "<td>" . htmlspecialchars($s['nama']) . "</td>";
                 echo "<td>" . htmlspecialchars($s['email']) . "</td>";
                 echo "<td>" . htmlspecialchars($s['hp']) . "</td>";
@@ -61,8 +74,9 @@
     </div>
     <script>
 
+
     let table = new DataTable('#myTable', {
-        responsive: true,
+        responsive: true
     });
        
     </script>
