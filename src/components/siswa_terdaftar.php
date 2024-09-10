@@ -23,7 +23,7 @@
             $no = 1; 
             foreach ($siswa as $s) {
                 $filePath = $s['berkas'];
-                $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION); // Mendapatkan ekstensi file
+                $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION); 
 
                 echo "<tr>";
                 echo "<td>" . $no++ . "</td>";
@@ -47,7 +47,6 @@
                 echo "<td>" . htmlspecialchars($s['ipk']) . "</td>";
                 echo "<td>" . htmlspecialchars($s['beasiswa']) . "</td>";
                 
-                // Menampilkan link atau ikon unduhan berdasarkan tipe file
                 echo "<td>";
                 if (!empty($filePath)) {
                     if ($fileExtension == 'pdf') {
