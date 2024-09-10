@@ -65,17 +65,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $filePath = $uploadDirectory . $newFilename;
                 } while (file_exists($filePath)); 
 
-                session_start();
-                    $_SESSION['uploaded_file'] = [
-                        'filename' => $newFilename,
-                        'path' => $filePath
-                    ];
-                    if (move_uploaded_file($_FILES['berkas']['tmp_name'],$filePath)) {
-                        
-                        echo "File berhasil diunggah: " . $newFilename;
-                    } else {
-                        $errorBerkas = "Gagal memindahkan file.";
-                    }
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start(); 
+                }    
+                $_SESSION['uploaded_file'] = [
+                    'filename' => $newFilename,
+                    'path' => $filePath
+                ];
+                if (move_uploaded_file($_FILES['berkas']['tmp_name'],$filePath)) {
+                    
+                    echo "File berhasil diunggah: " . $newFilename;
+                } else {
+                    $errorBerkas = "Gagal memindahkan file.";
+                }
             } else {
                 $errorBerkas = "Tipe file tidak diizinkan. Hanya PDF, JPG, dan ZIP yang diperbolehkan.";
             }
@@ -222,17 +224,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             ?>" disabled />
             <input type="text" id="status_ajuan" name="status_ajuan" value="<?php 
-                if($status_ajuan){
+                if($status_ajuan == 1){
                     echo "Sudah terverifikasi";
+                } else if ($status_ajuan == 2) {
+                    echo "Ditolak";
                 } else {
                     echo "Belum diverifikasi";
                 }
             ?>" hidden />
           </div>
           <div class="form-group" style="display: flex; flex-direction: column;">
+                <input type="button" value="Kembali" class="button-danger" onclick="window.history.back()">
+          </div>
+          <div class="form-group" style="display: flex; flex-direction: column;">
                 <input type="submit" value="KONFIRMASI">
           </div>
-
         </div>
       </form>
     </main>
